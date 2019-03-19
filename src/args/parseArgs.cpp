@@ -176,10 +176,10 @@ namespace arg {
                 std::vector<std::string> parts = split(s, '-');
                 std::string flagText = parts[parts.size() - 1];
 
-                auto flagFunc = flagFuncs.find(flagText)->second;
-                
-                // only call flag parsed func if an associated one is found
-                if(flagFunc != nullptr) {
+                // check if flag function if it exists in the map
+                auto iter = flagFuncs.find(flagText);
+                if(iter != flagFuncs.end()) {
+
                     std::string content;
                     if(i < spl.size() - 1) {
                         content = spl[i + 1];
@@ -187,12 +187,14 @@ namespace arg {
                         content = "";
                     }
 
-                    flagFunc(flagText, content, &parsedFlags);
+                    // now call associated function pointer
+                    iter->second(flagText, content, &parsedFlags);
                     
                     // increment i to skip next token since it was used by 
                     // the current flag
                     i++;
                 } else {
+                    // that flag doesnt have an entry in the function map
                     parsedFlags.error = true;
                     parsedFlags.errorText = "Unknown flag " + s;
                 }
