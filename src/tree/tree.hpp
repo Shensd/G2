@@ -1,32 +1,59 @@
 #ifndef TREE_HPP
 #define TREE_HPP
 
-template <class T>
+#include "position.hpp"
+
+template <typename T>
 class Tree {
-private:
+protected:
 
-    class Node {
-        Node* left;
-        Node* right;
-        Node* parent;
-        T value;
+    /**
+     * Protected node class is used to hide functions from user
+     */
+    template <typename E>
+    class Node : public Position<E>{
+    private:
+        Node<T>* parent;
+        Node<T>* left;
+        Node<T>* right;
 
-        Node(Node* left, Node* right, Node* parent, T value) :
-            left(left), right(right), parent(parent), value(value) {}
+        E* element;
+    public:
+        Node(Node* parent, Node* left, Node* right, E* element) : 
+            parent(parent), 
+            left(left), 
+            right(right), 
+            element(element) {}
+
+        E getElement() { return *element; }
+        Node* getParent() { return parent; }
+        Node* getLeft() { return left; }
+        Node* getRight() { return right; }
+
+        void setParent(Node* parent) { Node::parent = parent; }
+        void setLeft(Node* left) { Node::left = left; }
+        void setRight(Node* right) { Node::right = right; }
     };
-
-    Node root;
     
-    bool rootSet = false;
+private:
+    Node<T>* root;
+
+    Node<T>* validatePosition(Position<T>* position);
+
 public:
-    Tree();
+    Tree(T rootElement) { root = new Node<T>(nullptr, nullptr, nullptr, &rootElement); }
 
-    Node getParent(Node n) { return n.parent; }
+    // returns the root of the tree
+    Position<T>* getRoot() { return root; }
 
-    void setRoot(T value);
-    Node getRoot() { return root; }
+    T setElement(Position<T>* position, T element);
 
-    T getValue(Node n);
+    Position<T>* setLeft(Position<T>* position, T element);
+    Position<T>* setRight(Position<T>* position, T element);
+
+    Position<T>* getParent(Position<T>* position);
+    Position<T>* getLeft(Position<T>* position);
+    Position<T>* getRight(Position<T>* position);
 };
 
 #include "tree.tcc"
