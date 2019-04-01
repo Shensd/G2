@@ -5,16 +5,18 @@ namespace obf {
     // private namespace
     namespace {
 
-        std::string EulersTourTreeTraverse(Tree<ArithmeticTreeMember>* tree, Node<ArithmeticTreeMember>* position) {
+        std::string EulersTourTreeTraverse(Tree<ArithmeticTreeMember>* tree, Position<ArithmeticTreeMember>* position) {
             std::string tour = "";
 
             if(tree->getLeft(position) != nullptr) {
                 tour += "(" + EulersTourTreeTraverse(tree, tree->getLeft(position));
             }
 
-            ArithmeticTreeMember temp = position->getElement();
+            ArithmeticTreeMember temp = *position->getElement();
             if(temp.isOperator) {
-                tour += " " + std::to_string((char) temp.value) + " ";
+                tour += " ";
+                tour += ((char) temp.value);
+                tour += " ";
             } else {
                 tour += " " + std::to_string(temp.value) + " ";
             }
@@ -48,27 +50,17 @@ namespace obf {
          * @return string of odd arithemetic 
          */
         std::string getWeirdArithmetic(int num, int rounds = 1) {
-            ArithmeticTreeMember root(false, num);
-
-            Tree<ArithmeticTreeMember> equationTree(root);
-            
             std::pair<int, int> p = getSpreadXOR(num, 200);
 
-            std::cout << p.first << "," << p.second << std::endl;
-
-            root.isOperator = true;
-            root.value = OPERATOR::XOR;
-
+            ArithmeticTreeMember root(true, OPERATOR::XOR);
             ArithmeticTreeMember left(false, p.first);
             ArithmeticTreeMember right(false, p.second);
 
-            equationTree.setElement(equationTree.getRoot(), root); 
-            equationTree.setLeft(equationTree.getRoot(), left);
-            equationTree.setRight(equationTree.getRoot(), right);
+            Tree<ArithmeticTreeMember> equationTree(root);
 
-            std::cout << equationTree.getRoot() << std::endl;
-            std::cout << equationTree.getLeft(equationTree.getRoot()) << std::endl;
-            std::cout << equationTree.getRight(equationTree.getRoot()) << std::endl;
+            equationTree.setElement(equationTree.getRoot(), &root); 
+            equationTree.setLeft(equationTree.getRoot(), &left);
+            equationTree.setRight(equationTree.getRoot(), &right);
 
             return EulersTourTreeTraverse(&equationTree, equationTree.getRoot());
         }
@@ -192,9 +184,20 @@ namespace obf {
     std::string textObfuscate(std::string message) {
         srand(time(NULL));
 
-        std::string obfuscated = message;
+        std::string obfuscated = "char msg[] = {";
 
-        return getWeirdArithmetic(10);
+        std::vector<int> asciis = getAsciiValues(message);
+
+        for(int i = 0; i < asciis.size(); i++) {
+            obfuscated += getWeirdArithmetic(asciis.at(i));
+            if(i < asciis.size() - 1) {
+                obfuscated += ",";
+            }
+        }
+
+        obfuscated += "}";
+
+        return obfuscated;
     }
 
 }

@@ -35,7 +35,7 @@ namespace obf {
             ArithmeticTreeMember(bool isOperator, int value) : isOperator(isOperator), value(value) {}
         };
 
-        std::string EulersTourTreeTraverse(Tree<ArithmeticTreeMember>* tree, Node<ArithmeticTreeMember>* position);
+        std::string EulersTourTreeTraverse(Tree<ArithmeticTreeMember>* tree, Position<ArithmeticTreeMember>* position);
 
         std::vector<int> getAsciiValues(std::string str);
         std::string getWeirdArithmetic(int num, int rounds);
