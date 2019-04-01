@@ -4,8 +4,6 @@
 #include "args/parseArgs.hpp"
 #include "obf/textObfuscate.hpp"
 
-#include "tree/tree.hpp"
-
 std::string getArgString(int argc, char** argv) {
     std::string args = "";
 
@@ -18,6 +16,7 @@ std::string getArgString(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
+
     std::string args = getArgString(argc, argv);
 
     arg::flags options = arg::parse(args);

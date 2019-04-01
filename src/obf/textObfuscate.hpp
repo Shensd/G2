@@ -9,18 +9,33 @@
 
 #include <iostream>
 
+#include "../tree/tree.hpp"
+
 namespace obf {
 
     // private namespace
     namespace {
 
-        struct OperationPair {
-            char operation;
-            int first, second;
-            OperationPair(char operation, int first, int second) : 
-                operation(operation), first(first), second(second) {}
-            OperationPair() {}
+        enum OPERATOR {
+            ADD      = '+',
+            SUBTRACT = '-',
+            MULTIPLY = '*',
+            DIVIDE   = '/',
+            XOR      = '^',
+            NOT      = '!',
+            AND      = '&',
+            OR       = '|'
         };
+
+        struct ArithmeticTreeMember {
+            bool isOperator = false;
+
+            int value;
+
+            ArithmeticTreeMember(bool isOperator, int value) : isOperator(isOperator), value(value) {}
+        };
+
+        std::string EulersTourTreeTraverse(Tree<ArithmeticTreeMember>* tree, Node<ArithmeticTreeMember>* position);
 
         std::vector<int> getAsciiValues(std::string str);
         std::string getWeirdArithmetic(int num, int rounds);

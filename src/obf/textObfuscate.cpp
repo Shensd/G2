@@ -5,6 +5,27 @@ namespace obf {
     // private namespace
     namespace {
 
+        std::string EulersTourTreeTraverse(Tree<ArithmeticTreeMember>* tree, Node<ArithmeticTreeMember>* position) {
+            std::string tour = "";
+
+            if(tree->getLeft(position) != nullptr) {
+                tour += "(" + EulersTourTreeTraverse(tree, tree->getLeft(position));
+            }
+
+            ArithmeticTreeMember temp = position->getElement();
+            if(temp.isOperator) {
+                tour += " " + std::to_string((char) temp.value) + " ";
+            } else {
+                tour += " " + std::to_string(temp.value) + " ";
+            }
+
+            if(tree->getRight(position) != nullptr) {
+                tour += EulersTourTreeTraverse(tree, tree->getRight(position)) + ")";
+            }
+
+            return tour;
+        }
+
         /**
          * Returns a vector of all ascii values in a string
          * 
@@ -27,33 +48,29 @@ namespace obf {
          * @return string of odd arithemetic 
          */
         std::string getWeirdArithmetic(int num, int rounds = 1) {
-            std::string weirdArth = "";
+            ArithmeticTreeMember root(false, num);
+
+            Tree<ArithmeticTreeMember> equationTree(root);
             
-            std::vector<int> factorized = getPrimeFactorization(num);
-            std::vector<std::pair<int, int>> pairs;
+            std::pair<int, int> p = getSpreadXOR(num, 200);
 
-            for(int f : factorized) {
-                int choice = rand() % 3;
+            std::cout << p.first << "," << p.second << std::endl;
 
-                switch(choice) {
-                    case 1:
-                    
+            root.isOperator = true;
+            root.value = OPERATOR::XOR;
 
-                        break;
+            ArithmeticTreeMember left(false, p.first);
+            ArithmeticTreeMember right(false, p.second);
 
-                    case 2:
-                        
+            equationTree.setElement(equationTree.getRoot(), root); 
+            equationTree.setLeft(equationTree.getRoot(), left);
+            equationTree.setRight(equationTree.getRoot(), right);
 
-                        break;
+            std::cout << equationTree.getRoot() << std::endl;
+            std::cout << equationTree.getLeft(equationTree.getRoot()) << std::endl;
+            std::cout << equationTree.getRight(equationTree.getRoot()) << std::endl;
 
-                    case 3:
-                        
-                        
-                        break;
-                }
-            }
-
-            return weirdArth;
+            return EulersTourTreeTraverse(&equationTree, equationTree.getRoot());
         }
 
         /**
@@ -177,18 +194,7 @@ namespace obf {
 
         std::string obfuscated = message;
 
-        int test = -200;
-
-        std::pair<int, int> add = getSpreadAddition(test);
-        std::pair<int, int> sub = getSpreadSubtraction(test, 200);
-        std::pair<int, int> zor = getSpreadXOR(test, 200);
-
-        std::cout << "OOO :" << test << std::endl;
-        std::cout << "ADD : " << add.first << " + " << add.second << " = " << (add.first + add.second) << std::endl;
-        std::cout << "SUB : " << sub.first << " - " << sub.second << " = " << (sub.first - sub.second) << std::endl;
-        std::cout << "XOR : " << zor.first << " ^ " << zor.second << " = " << (zor.first ^ zor.second) << std::endl;
-
-        return obfuscated;
+        return getWeirdArithmetic(10);
     }
 
 }
