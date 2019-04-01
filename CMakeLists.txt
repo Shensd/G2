@@ -10,6 +10,4 @@ add_executable(
     src/args/parseArgs.cpp
 
     src/obf/textObfuscate.cpp
-
-    src/tree/tree.cpp
 )
