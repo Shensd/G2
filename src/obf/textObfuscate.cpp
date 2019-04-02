@@ -12,7 +12,7 @@ namespace obf {
                 tour += "(" + EulersTourTreeTraverse(tree, tree->getLeft(position));
             }
 
-            ArithmeticTreeMember temp = *position->getElement();
+            ArithmeticTreeMember temp = position->getElement();
             if(temp.isOperator) {
                 tour += " ";
                 tour += ((char) temp.value);
@@ -26,6 +26,46 @@ namespace obf {
             }
 
             return tour;
+        }
+
+        Tree<ArithmeticTreeMember> randomBreak(int num, int maxOverflow) {
+
+            int choice = rand() % 5;
+            
+            std::pair<int, int> p;
+            ArithmeticTreeMember root;
+            root.isOperator = true;
+            switch(choice) {
+                case 0:
+                    root.value = OPERATOR::ADD;
+                    p = getSpreadAddition(num);
+                    break;
+                case 1:
+                    root.value = OPERATOR::SUBTRACT;
+                    p = getSpreadSubtraction(num, maxOverflow);
+                    break;
+                case 2:
+                    root.value = OPERATOR::MULTIPLY;
+                    p = getSpreadMultiplication(num);
+                    break;
+                case 3:
+                    root.value = OPERATOR::DIVIDE;
+                    p = getSpreadDivision(num, maxOverflow);
+                    break;
+                default:
+                case 4:
+                    root.value = OPERATOR::XOR;
+                    p = getSpreadXOR(num, maxOverflow);
+            }
+
+            ArithmeticTreeMember left(false, p.first);
+            ArithmeticTreeMember right(false, p.second);
+
+            Tree<ArithmeticTreeMember> equationTree(root);
+            equationTree.setLeft(equationTree.getRoot(), left);
+            equationTree.setRight(equationTree.getRoot(), right);
+
+            return equationTree;
         }
 
         /**
@@ -50,17 +90,7 @@ namespace obf {
          * @return string of odd arithemetic 
          */
         std::string getWeirdArithmetic(int num, int rounds = 1) {
-            std::pair<int, int> p = getSpreadXOR(num, 200);
-
-            ArithmeticTreeMember root(true, OPERATOR::XOR);
-            ArithmeticTreeMember left(false, p.first);
-            ArithmeticTreeMember right(false, p.second);
-
-            Tree<ArithmeticTreeMember> equationTree(root);
-
-            equationTree.setElement(equationTree.getRoot(), &root); 
-            equationTree.setLeft(equationTree.getRoot(), &left);
-            equationTree.setRight(equationTree.getRoot(), &right);
+            Tree<ArithmeticTreeMember> equationTree = randomBreak(num, 200);
 
             return EulersTourTreeTraverse(&equationTree, equationTree.getRoot());
         }
@@ -124,7 +154,7 @@ namespace obf {
          * Spreads out a given number by addition
          * 
          * @param num number to spread
-         * @return a vector of numbers that can be added up to original
+         * @return a pair of numbers that can be added up to original
          */
         std::pair<int, int> getSpreadAddition(int num) {
             
@@ -143,7 +173,7 @@ namespace obf {
          * Spreads out a given number by subtraction
          * 
          * @param num number to spread
-         * @return a vector of numbers that can be subtracted to original
+         * @return a pair of numbers that can be subtracted to original
          */
         std::pair<int, int> getSpreadSubtraction(int num, int maxOverflow) {
 
@@ -160,10 +190,34 @@ namespace obf {
         }
 
         /**
+         * Spreads out a given number by division
+         * 
+         * @param num number to spread
+         * @return a pair of numbers that can be multiplied to get the original
+         */
+        std::pair<int, int> getSpreadMultiplication(int num) {
+            return std::pair<int, int>(1, num);
+        }
+
+        /**
+         * Spreads out a given number by division
+         * 
+         * @param num number to spread
+         * @param maxOverflow cap for expansion
+         * @return a pair of numbers that can be divided to get the original
+         */
+        std::pair<int, int> getSpreadDivision(int num, int maxOverflow) {
+            int operandB = rand() % maxOverflow;
+            int operandA = num * operandB;
+
+            return std::pair<int, int>(operandA, operandB);
+        }
+
+        /**
          * Spreads out a given number by XOR
          * 
          * @param num number to spread
-         * @return a vector of numbers that can be XOR'd to original
+         * @return a pair of numbers that can be XOR'd to original
          */
         std::pair<int, int> getSpreadXOR(int num, int maxOverflow) {
 

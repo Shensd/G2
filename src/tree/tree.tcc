@@ -20,7 +20,7 @@ Tree<T>::Node<T>* Tree<T>::validatePosition(Position<T>* position) {
  * @returns element previously stored at position
  */
 template<typename T>
-T Tree<T>::setElement(Position<T>* position, T* element) {
+T Tree<T>::setElement(Position<T>* position, T element) {
     Node<T>* node = validatePosition(position);
 
     T old = *node->getElement();
@@ -38,7 +38,7 @@ T Tree<T>::setElement(Position<T>* position, T* element) {
  * @returns position of new node
  */
 template <typename T> 
-Position<T>* Tree<T>::setLeft(Position<T>* position, T* element) {
+Position<T>* Tree<T>::setLeft(Position<T>* position, T element) {
     Node<T>* parent = validatePosition(position);
 
     Node<T>* left = new Node<T>(parent, nullptr, nullptr, element);
@@ -56,7 +56,7 @@ Position<T>* Tree<T>::setLeft(Position<T>* position, T* element) {
  * @returns position of new node
  */
 template <typename T>
-Position<T>* Tree<T>::setRight(Position<T>* position, T* element) {
+Position<T>* Tree<T>::setRight(Position<T>* position, T element) {
     Node<T>* parent = validatePosition(position);
 
     Node<T>* right = new Node<T>(parent, nullptr, nullptr, element);

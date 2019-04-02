@@ -33,9 +33,12 @@ namespace obf {
             int value;
 
             ArithmeticTreeMember(bool isOperator, int value) : isOperator(isOperator), value(value) {}
+            ArithmeticTreeMember() {}
         };
 
         std::string EulersTourTreeTraverse(Tree<ArithmeticTreeMember>* tree, Position<ArithmeticTreeMember>* position);
+
+        Tree<ArithmeticTreeMember> randomBreak(int num);
 
         std::vector<int> getAsciiValues(std::string str);
         std::string getWeirdArithmetic(int num, int rounds);
@@ -46,9 +49,10 @@ namespace obf {
 
         // spread functions
         std::pair<int, int> getSpreadAddition(int num);
-        std::pair<int, int> getSpreadSubtraction(int num, int maxOverflow);
-        std::pair<int, int> getSpreadXOR(int num, int maxOverflow);
-
+        std::pair<int, int> getSpreadSubtraction(int num, int maxOverflow = 200);
+        std::pair<int, int> getSpreadMultiplication(int num);
+        std::pair<int, int> getSpreadDivision(int num, int maxOverflow = 200);
+        std::pair<int, int> getSpreadXOR(int num, int maxOverflow = 200);
     }
 
 
