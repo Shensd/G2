@@ -5,6 +5,14 @@ namespace obf {
     // private namespace
     namespace {
 
+        /**
+         * Traverse a tree of ArithmeticTreeMembers eulers tour style and return
+         * the intepreted string
+         * 
+         * @param tree tree to travers
+         * @param position starting position to traverse from
+         * @return string of traversed tree
+         */
         std::string EulersTourTreeTraverse(Tree<ArithmeticTreeMember>* tree, Position<ArithmeticTreeMember>* position) {
             std::string tour = "";
 
@@ -28,6 +36,13 @@ namespace obf {
             return tour;
         }
 
+        /**
+         * Genreate a random equation tree for a given number
+         * 
+         * @param num number to create equation for
+         * @param maxOverflow overflow for individual spread functions
+         * @return a tree of ArithemeticTreeMembers describing an equation for the number
+         */
         Tree<ArithmeticTreeMember> randomBreak(int num, int maxOverflow) {
 
             int choice = rand() % 5;
@@ -235,6 +250,12 @@ namespace obf {
 
     }
 
+    /**
+     * Obfuscate a given string into a string of a C char array
+     * 
+     * @param message message to encode
+     * @return string of C char array syntax
+     */
     std::string textObfuscate(std::string message) {
         srand(time(NULL));
 

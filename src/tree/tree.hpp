@@ -7,9 +7,6 @@ template <typename T>
 class Tree {
 protected:
 
-    /**
-     * Protected node class is used to hide functions from user
-     */
     template <typename E>
     class Node : public Position<E>{
     private:
@@ -44,7 +41,6 @@ private:
 public:
     Tree(T rootElement) { root = new Node<T>(nullptr, nullptr, nullptr, rootElement); }
 
-    // returns the root of the tree
     Position<T>* getRoot() { return root; }
 
     T setElement(Position<T>* position, T element);
