@@ -137,6 +137,18 @@ namespace arg {
             }
             return str;
         }
+
+
+        /**
+         * Groups together string tokens that have enclosing quotes, tokens
+         * assumed to have been broken with space delim
+         * 
+         * @param tokens tokens to parse quotes from
+         * @return vector of tokens with enclosing quotes groups together
+         */
+        std::vector<std::string> parseQuotes(std::vector<std::string> tokens) {
+            
+        }
     }
 
     /**

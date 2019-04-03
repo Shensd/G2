@@ -22,10 +22,10 @@ protected:
             right(right), 
             element(element) {}
 
-        E getElement() { return element; }
-        Node* getParent() { return parent; }
-        Node* getLeft() { return left; }
-        Node* getRight() { return right; }
+        E getElement(void) { return element; }
+        Node* getParent(void) { return parent; }
+        Node* getLeft(void) { return left; }
+        Node* getRight(void) { return right; }
 
         void setElement(E element) { Node::element = element; }
         void setParent(Node* parent) { Node::parent = parent; }
@@ -47,6 +47,11 @@ public:
 
     Position<T>* setLeft(Position<T>* position, T element);
     Position<T>* setRight(Position<T>* position, T element);
+    
+    void setRoot(Position<T>* position);
+    
+    void setLeftTree(Position<T>* position, Tree<T>* tree);
+    void setRightTree(Position<T>* position, Tree<T>* tree);
 
     Position<T>* getParent(Position<T>* position);
     Position<T>* getLeft(Position<T>* position);

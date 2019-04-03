@@ -27,6 +27,11 @@ namespace obf {
             OR       = '|'
         };
 
+        enum SIDE {
+            LEFT = true,
+            RIGHT = false
+        };
+
         struct ArithmeticTreeMember {
             bool isOperator = false;
 

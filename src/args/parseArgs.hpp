@@ -48,6 +48,8 @@ namespace arg {
 
         // string to lower helper function
         std::string toLower(std::string str);
+
+        std::vector<std::string> parseQuotes(std::vector<std::string> tokens);
     };
 
     flags parse(std::string rawArgs);

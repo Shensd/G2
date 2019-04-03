@@ -49,6 +49,50 @@ Position<T>* Tree<T>::setLeft(Position<T>* position, T element) {
 }
 
 /**
+ * Set the root to a new position
+ * 
+ * @param position new position to set root to
+ */
+template <typename T>
+void Tree<T>::setRoot(Position<T>* position) {
+    Tree<T>::root = validatePosition(position);
+}
+
+/**
+ * Set the left element of a given position to the root of a given tree
+ * 
+ * @param position position to replace with tree
+ * @param tree tree to replace with 
+ */
+template <typename T>
+void Tree<T>::setLeftTree(Position<T>* position, Tree<T>* tree) {
+    Node<T>* parent = validatePosition(position);
+
+    parent->setLeft(
+        (Node<T>*)tree->getRoot()
+    );
+
+    tree->setRoot(Tree<T>::getRoot());
+}
+
+/**
+ * Set the right element of a given position to the root of a given tree
+ * 
+ * @param position position to replace with tree
+ * @param tree tree to replace with 
+ */
+template <typename T>
+void Tree<T>::setRightTree(Position<T>* position, Tree<T>* tree) {
+    Node<T>* parent = validatePosition(position);
+
+    parent->setRight(
+        (Node<T>*)tree->getRoot()
+    );
+
+    tree->setRoot(Tree<T>::getRoot());
+}
+
+/**
  * Set the right element of a given position
  * 
  * @param position position to set right of
