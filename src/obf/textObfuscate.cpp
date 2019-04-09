@@ -216,7 +216,7 @@ namespace obf {
                 return std::pair<int, int>(0, 0);
             }
 
-            int operandA = rand() % num;
+            int operandA = (rand() % num) + 1;
             int operandB = num - operandA;
 
             return std::pair<int, int>(operandA, operandB);
@@ -236,7 +236,7 @@ namespace obf {
                 return std::pair<int, int>(operand, operand);
             }
             
-            int operandA = rand() % maxOverflow + (num + 1);
+            int operandA = rand() % maxOverflow + (num);
             int operandB = num + operandA;
 
             return std::pair<int, int>(operandB, operandA);
@@ -244,7 +244,7 @@ namespace obf {
         }
 
         /**
-         * Spreads out a given number by division
+         * Spreads out a given number by multiplication
          * 
          * @param num number to spread
          * @return a pair of numbers that can be multiplied to get the original
@@ -261,7 +261,12 @@ namespace obf {
          * @return a pair of numbers that can be divided to get the original
          */
         std::pair<int, int> getSpreadDivision(int num, int maxOverflow) {
-            int operandB = rand() % maxOverflow;
+            if(num == 0) {
+                int operand = (rand() % maxOverflow) + 1;
+                return std::pair<int, int>(0, operand);
+            }
+
+            int operandB = (rand() % maxOverflow) + 1;
             int operandA = num * operandB;
 
             return std::pair<int, int>(operandA, operandB);
@@ -276,11 +281,11 @@ namespace obf {
         std::pair<int, int> getSpreadXOR(int num, int maxOverflow) {
 
             if(num == 0) {
-                int operand = rand() % maxOverflow;
+                int operand = (rand() % maxOverflow) + 1;
                 return std::pair<int, int>(operand, operand);
             }
 
-            int operandA = rand() % maxOverflow;
+            int operandA = (rand() % maxOverflow) + 1;
             int operandB = num ^ operandA;
 
             return std::pair<int, int>(operandA, operandB);
@@ -298,18 +303,18 @@ namespace obf {
     std::string textObfuscate(std::string message) {
         srand(time(NULL));
 
-        std::string obfuscated = "#include <stdio>\nint main(){char msg[] = {";
+        std::string obfuscated = "#include <stdio.h>\nint main(){char msg[] = {";
 
         std::vector<int> asciis = getAsciiValues(message);
 
         for(int i = 0; i < asciis.size(); i++) {
-            obfuscated += getWeirdArithmetic(asciis.at(i), 2);
+            obfuscated += getWeirdArithmetic(asciis.at(i), 15);
             if(i < asciis.size() - 1) {
                 obfuscated += ",";
             }
         }
 
-        obfuscated += "};for(int i = 0; i < " + std::to_string(message.size()) + "; i++) {printf(msg[i]);}}";
+        obfuscated += "};for(int i = 0; i < " + std::to_string(message.size()) + "; i++) {printf(\"%c\", msg[i]);}}";
 
         return obfuscated;
     }

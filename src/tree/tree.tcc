@@ -70,6 +70,8 @@ void Tree<T>::setTree(Position<T>* position, Tree<T>* tree) {
     Node<T>* newLeft = validatePosition(tree->getLeft(tree->getRoot()));
     Node<T>* newRight = validatePosition(tree->getRight(tree->getRoot()));
 
+    node->setElement(tree->getRoot()->getElement());
+
     newLeft->setParent(node);
     newRight->setParent(node);
 
