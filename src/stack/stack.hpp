@@ -2,6 +2,7 @@
 #define STACK_HPP
 
 #include <vector>
+#include <stdexcept>
 
 template <typename T>
 class Stack {

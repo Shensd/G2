@@ -1,6 +1,7 @@
 template <typename T>
 Queue<T>::Queue(int maxSize) : maxSize(maxSize) {
-    list = std::vector<T>(size);
+    list = std::vector<T>(maxSize);
+    list.reserve(maxSize);
 }
 
 template <typename T>
@@ -15,6 +16,8 @@ Queue<T>::Queue() {
  */
 template <typename T>
 void Queue<T>::enqueue(T element) {
+    if(getSize() == maxSize) throw new std::runtime_error("Attempted to enqueue element but queue is full.");
+
     list[(front + size) % maxSize] = element;
     size++;
 }
@@ -26,9 +29,11 @@ void Queue<T>::enqueue(T element) {
  */
 template <typename T>
 T Queue<T>::dequeue(void) {
+    if(isEmpty()) throw new std::runtime_error("Attempted to dequeue but queue is empty");
+
     T temp = list[front];
 
-    list[front] = NULL;
+    list[front] = 0;
 
     front = (front + 1) % maxSize;
     size--;
@@ -39,10 +44,12 @@ T Queue<T>::dequeue(void) {
 /**
  * Get the element at the front of the queue without removing it
  * 
- * @return element at front of queue
+ * @return element at front of queue, or nullptr if empty
  */
 template <typename T>
 T Queue<T>::getTop(void) {
+    if(isEmpty()) return nullptr;
+
     return list[(front + size) % maxSize];
 }
 
@@ -53,7 +60,7 @@ T Queue<T>::getTop(void) {
  */
 template <typename T>
 int Queue<T>::getSize(void) {
-    return size == 0;
+    return size;
 }
 
 /**

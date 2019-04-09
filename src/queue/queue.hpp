@@ -2,6 +2,7 @@
 #define QUEUE_HPP
 
 #include <vector>
+#include <stdexcept>
 
 template <typename T>
 class Queue {
