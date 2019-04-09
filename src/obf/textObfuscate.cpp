@@ -14,6 +14,11 @@ namespace obf {
          * @return string of traversed tree
          */
         std::string EulersTourTreeTraverse(Tree<ArithmeticTreeMember>* tree, Position<ArithmeticTreeMember>* position) {
+
+            // TODO 
+            // CHAR ARITHMETIC
+            // MOVE FUNC TO OWN CLASS
+
             std::string tour = "";
 
             if(tree->getLeft(position) != nullptr) {
@@ -22,11 +27,12 @@ namespace obf {
 
             ArithmeticTreeMember temp = position->getElement();
             if(temp.isOperator) {
-                tour += " ";
+                //tour += " ";
                 tour += ((char) temp.value);
-                tour += " ";
+                //tour += " ";
             } else {
-                tour += " " + std::to_string(temp.value) + " ";
+                //tour += " " + std::to_string(temp.value) + " ";
+                tour += std::to_string(temp.value);
             }
 
             if(tree->getRight(position) != nullptr) {
@@ -308,7 +314,7 @@ namespace obf {
         std::vector<int> asciis = getAsciiValues(message);
 
         for(int i = 0; i < asciis.size(); i++) {
-            obfuscated += getWeirdArithmetic(asciis.at(i), 15);
+            obfuscated += getWeirdArithmetic(asciis.at(i), 20);
             if(i < asciis.size() - 1) {
                 obfuscated += ",";
             }

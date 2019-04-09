@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 
 #include "args/parseArgs.hpp"
@@ -19,6 +20,10 @@ int main(int argc, char** argv) {
 
     arg::flags options = arg::parse(args);
 
+    // TODO 
+    // Add intensity
+    // Add obfuscation types (whitespace, equations)
+    // Add ability to obfuscate exisiting c programs
     std::string helpDialog = 
             "G2 - An obfuscated C message generator\n"
             "\n"
@@ -30,7 +35,7 @@ int main(int argc, char** argv) {
             "--text, -t\n"
             "   text to encode\n"
             "--filename, -o\n"
-            "   (default out.c) name of output c file\n"
+            "   (use - for stdout) name of output c file\n"
             "\n"
             "Copyright 2019 Jack Hance";
 
@@ -42,7 +47,21 @@ int main(int argc, char** argv) {
     }
 
     if(options.textSet) {
-        std::cout << obf::textObfuscate(options.text) << std::endl;
+        std::string obfuscated =  obf::textObfuscate(options.text);
+
+        if(options.filenameSet) {
+            if(options.filename == "-") {
+                std::cout << obfuscated << std::endl;
+            } else {
+                std::ofstream out(options.filename.c_str());
+                out << obfuscated;
+                out << "\n";
+                out.close();
+            }
+        } else {
+            std::cout << obfuscated << std::endl;
+        }
+
     }
 
 }
