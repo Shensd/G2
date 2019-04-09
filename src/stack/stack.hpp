@@ -20,7 +20,7 @@ public:
     void push(T);
     T pop(void);
 
-    T getTop(void);
+    T peek(void);
     int getSize(void);
     bool isEmpty(void);
 };

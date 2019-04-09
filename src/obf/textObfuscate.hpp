@@ -46,7 +46,10 @@ namespace obf {
         Tree<ArithmeticTreeMember> randomBreak(int num);
 
         std::vector<int> getAsciiValues(std::string str);
-        std::string getWeirdArithmetic(int num, int rounds);
+
+        Position<ArithmeticTreeMember>* getRandomNumberNode(Tree<ArithmeticTreeMember>* tree, Position<ArithmeticTreeMember>* startPoint);
+
+        std::string getWeirdArithmetic(int num, int rounds = 1);
 
         // prime functions
         bool isPrime(int num);

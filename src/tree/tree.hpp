@@ -50,6 +50,7 @@ public:
     
     void setRoot(Position<T>* position);
     
+    void setTree(Position<T>* position, Tree<T>* tree);
     void setLeftTree(Position<T>* position, Tree<T>* tree);
     void setRightTree(Position<T>* position, Tree<T>* tree);
 

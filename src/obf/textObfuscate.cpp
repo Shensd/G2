@@ -43,7 +43,7 @@ namespace obf {
          * @param maxOverflow overflow for individual spread functions
          * @return a tree of ArithemeticTreeMembers describing an equation for the number
          */
-        Tree<ArithmeticTreeMember> randomBreak(int num, int maxOverflow) {
+        Tree<ArithmeticTreeMember>* randomBreak(int num, int maxOverflow) {
 
             int choice = rand() % 5;
             
@@ -76,9 +76,9 @@ namespace obf {
             ArithmeticTreeMember left(false, p.first);
             ArithmeticTreeMember right(false, p.second);
 
-            Tree<ArithmeticTreeMember> equationTree(root);
-            equationTree.setLeft(equationTree.getRoot(), left);
-            equationTree.setRight(equationTree.getRoot(), right);
+            Tree<ArithmeticTreeMember> *equationTree = new Tree<ArithmeticTreeMember>(root);
+            equationTree->setLeft(equationTree->getRoot(), left);
+            equationTree->setRight(equationTree->getRoot(), right);
 
             return equationTree;
         }
@@ -98,16 +98,55 @@ namespace obf {
         }
 
         /**
+         * Get a random number node from a given starting point
+         * 
+         * @param tree tree to grab random position from
+         * @param startPoint position on tree to start search from
+         * @return random position on tree of type number
+         */
+        Position<ArithmeticTreeMember>* getRandomNumberNode(Tree<ArithmeticTreeMember>* tree, Position<ArithmeticTreeMember>* startPoint) {
+            int side = (rand() % 2 == 0) ? SIDE::LEFT : SIDE::RIGHT;
+
+            Position<ArithmeticTreeMember>* temp;
+            // pick from left side
+            if(side == SIDE::LEFT) {
+                temp = tree->getLeft(startPoint);
+            // pick from right side
+            } else {
+                temp = tree->getRight(startPoint);
+            }
+
+            if(!temp->getElement().isOperator) {
+                return temp;
+            } else {
+                return getRandomNumberNode(tree, temp);
+            }
+        }
+
+        /**
          * Convert an int to a string of a given number of arithmetic expressions
          * 
          * @param num number to convert
          * @param rounds of splitting to perform on numbers
          * @return string of odd arithemetic 
          */
-        std::string getWeirdArithmetic(int num, int rounds = 1) {
-            Tree<ArithmeticTreeMember> equationTree = randomBreak(num, 200);
+        std::string getWeirdArithmetic(int num, int rounds) {
+            if(rounds < 1) rounds = 1;
 
-            return EulersTourTreeTraverse(&equationTree, equationTree.getRoot());
+            Tree<ArithmeticTreeMember> *equationTree = randomBreak(num, 200);
+
+            for(int i = 0; i < rounds; i++) {
+                
+                Position<ArithmeticTreeMember>* decompose = getRandomNumberNode(equationTree, equationTree->getRoot());
+
+                equationTree->setTree(
+                    decompose, 
+                    randomBreak(decompose->getElement().value, 200)
+                );
+
+            }
+
+            return EulersTourTreeTraverse(equationTree, equationTree->getRoot());
         }
 
         /**
@@ -259,18 +298,18 @@ namespace obf {
     std::string textObfuscate(std::string message) {
         srand(time(NULL));
 
-        std::string obfuscated = "char msg[] = {";
+        std::string obfuscated = "#include <stdio>\nint main(){char msg[] = {";
 
         std::vector<int> asciis = getAsciiValues(message);
 
         for(int i = 0; i < asciis.size(); i++) {
-            obfuscated += getWeirdArithmetic(asciis.at(i));
+            obfuscated += getWeirdArithmetic(asciis.at(i), 2);
             if(i < asciis.size() - 1) {
                 obfuscated += ",";
             }
         }
 
-        obfuscated += "}";
+        obfuscated += "};for(int i = 0; i < " + std::to_string(message.size()) + "; i++) {printf(msg[i]);}}";
 
         return obfuscated;
     }

@@ -137,18 +137,6 @@ namespace arg {
             }
             return str;
         }
-
-
-        /**
-         * Groups together string tokens that have enclosing quotes, tokens
-         * assumed to have been broken with space delim
-         * 
-         * @param tokens tokens to parse quotes from
-         * @return vector of tokens with enclosing quotes groups together
-         */
-        std::vector<std::string> parseQuotes(std::vector<std::string> tokens) {
-            
-        }
     }
 
     /**
@@ -159,7 +147,7 @@ namespace arg {
      * @param rawArgs command line arg string
      * @return a flag structure of set args
      */
-    flags parse(std::string rawArgs) {
+    flags parse(std::vector<std::string> rawArgs) {
         struct flags parsedFlags;
 
         // create flag parse map
@@ -177,11 +165,8 @@ namespace arg {
             {"o", &flagParseFilename}
         };
 
-        // split our given command string into pieces 
-        std::vector<std::string> spl = split(rawArgs);
-
-        for(int i = 0; i < spl.size(); i++) {
-            std::string s = spl[i];
+        for(int i = 0; i < rawArgs.size(); i++) {
+            std::string s = rawArgs[i];
 
             // is tack flag, pull flag text
             if(s[0] == '-') {
@@ -193,8 +178,8 @@ namespace arg {
                 if(iter != flagFuncs.end()) {
 
                     std::string content;
-                    if(i < spl.size() - 1) {
-                        content = spl[i + 1];
+                    if(i < rawArgs.size() - 1) {
+                        content = rawArgs[i + 1];
                     } else {
                         content = "";
                     }

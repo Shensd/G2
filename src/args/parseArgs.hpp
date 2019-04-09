@@ -6,6 +6,10 @@
 #include <functional>
 #include <map>
 
+#include <iostream>
+
+#include "../stack/stack.hpp"
+
 namespace arg {
     enum inputFormat {
         IMAGE,
@@ -48,11 +52,9 @@ namespace arg {
 
         // string to lower helper function
         std::string toLower(std::string str);
-
-        std::vector<std::string> parseQuotes(std::vector<std::string> tokens);
     };
 
-    flags parse(std::string rawArgs);
+    flags parse(std::vector<std::string>  rawArgs);
 };   
 
 #endif // !PARSE_ARGS_HPP

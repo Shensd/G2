@@ -65,6 +65,27 @@ void Tree<T>::setRoot(Position<T>* position) {
  * @param tree tree to replace with 
  */
 template <typename T>
+void Tree<T>::setTree(Position<T>* position, Tree<T>* tree) {
+    Node<T>* node = validatePosition(position);
+    Node<T>* newLeft = validatePosition(tree->getLeft(tree->getRoot()));
+    Node<T>* newRight = validatePosition(tree->getRight(tree->getRoot()));
+
+    newLeft->setParent(node);
+    newRight->setParent(node);
+
+    node->setLeft(newLeft);
+    node->setRight(newRight);
+
+    tree->setRoot(node);
+}
+
+/**
+ * Set the left element of a given position to the root of a given tree
+ * 
+ * @param position position to replace with tree
+ * @param tree tree to replace with 
+ */
+template <typename T>
 void Tree<T>::setLeftTree(Position<T>* position, Tree<T>* tree) {
     Node<T>* parent = validatePosition(position);
 

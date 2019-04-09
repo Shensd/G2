@@ -4,20 +4,18 @@
 #include "args/parseArgs.hpp"
 #include "obf/textObfuscate.hpp"
 
-std::string getArgString(int argc, char** argv) {
-    std::string args = "";
+std::vector<std::string> getArgString(int argc, char** argv) {
+    std::vector<std::string> args;
 
     for(int i = 1; i < argc; i++) {
-        args += argv[i];
-        if(i < argc - 1) args += " ";
+        args.push_back(argv[i]);
     }
 
     return args;
 }
 
 int main(int argc, char** argv) {
-
-    std::string args = getArgString(argc, argv);
+    std::vector<std::string> args = getArgString(argc, argv);
 
     arg::flags options = arg::parse(args);
 

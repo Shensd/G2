@@ -42,7 +42,7 @@ T Stack<T>::pop(void) {
  * @return top item of stack
  */
 template <typename T>
-T Stack<T>::getTop(void) {
+T Stack<T>::peek(void) {
     return list[top];
 }
 
