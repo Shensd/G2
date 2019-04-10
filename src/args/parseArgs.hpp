@@ -33,20 +33,24 @@ namespace arg {
 
         bool error = false;
         std::string errorText = "";
+
+        bool whitespaceSet = false;
     };
 
     // private namespace
     namespace {
 
         // flag parse funcs
-        void flagParseHelp(std::string flagText, std::string content, struct flags* flagPool );
-        void flagParseText(std::string flagText, std::string content, struct flags* flagPool );
-        void flagParseType(std::string flagText, std::string content, struct flags* flagPool );
-        void flagParseFilename(std::string flagText, std::string content, struct flags* flagPool );
-        void flagParseIntensity(std::string flagText, std::string content, struct flags* flagPool );
+        void flagParseHelp(std::string flagText, struct flags* flagPool);
+        void flagParseText(std::string flagText, std::string content, struct flags* flagPool);
+        void flagParseType(std::string flagText, std::string content, struct flags* flagPool);
+        void flagParseFilename(std::string flagText, std::string content, struct flags* flagPool);
+        void flagParseIntensity(std::string flagText, std::string content, struct flags* flagPool);
+        void flagParseWhitespace(std::string flagText, struct flags* flagPool);
 
         // flag parse func map
         std::map<std::string, void(*)(std::string, std::string, struct flags*)> flagFuncs;
+        std::map<std::string, void(*)(std::string, struct flags*)> flagFuncsNoContent;
 
         // split helper function
         std::vector<std::string> split(std::string str, char delim);

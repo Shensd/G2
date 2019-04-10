@@ -12,7 +12,7 @@ namespace arg {
          * @param content next block of text in command arg string
          * @param flagPool struct of already set flags
          */
-        void flagParseHelp(std::string flagText, std::string content, struct flags* flagPool) {
+        void flagParseHelp(std::string flagText, struct flags* flagPool) {
             flagPool->helpSet = true;
         }
 
@@ -109,6 +109,17 @@ namespace arg {
         }
 
         /**
+         * Set if whitespace randomization should be performed
+         * 
+         * @param flagText text of flag
+         * @param content next block of text in commard arg string
+         * @param flagPool struct of already set flags
+         */
+        void flagParseWhitespace(std::string flagText, struct flags* flagPool) {
+            flagPool->whitespaceSet = true;
+        }
+
+        /**
          * splits a string by a given delim and returns the result in a vector
          * 
          * @param str string to be split
@@ -178,9 +189,6 @@ namespace arg {
 
         // create flag parse map
         flagFuncs = {
-            {"help", &flagParseHelp},
-            {"h", &flagParseHelp},
-
             {"text", &flagParseText},
             {"t", &flagParseText},
 
@@ -192,6 +200,14 @@ namespace arg {
 
             {"intensity", &flagParseIntensity},
             {"i", &flagParseIntensity}
+        };
+
+        flagFuncsNoContent = {
+            {"help", &flagParseHelp},
+            {"h", &flagParseHelp},
+
+            {"whitespace", &flagParseWhitespace},
+            {"w", &flagParseWhitespace}
         };
 
         for(int i = 0; i < rawArgs.size(); i++) {
@@ -220,9 +236,18 @@ namespace arg {
                     // the current flag
                     i++;
                 } else {
-                    // that flag doesnt have an entry in the function map
-                    parsedFlags.error = true;
-                    parsedFlags.errorText = "Unknown flag " + s;
+
+                    // if a flag that requires content isn't found, try to process
+                    // as a no content flag
+                    auto iter = flagFuncsNoContent.find(flagText);
+
+                    if(iter != flagFuncsNoContent.end()) {
+                        iter->second(flagText, &parsedFlags);
+                    } else {
+                        // that flag doesnt have an entry in the function map
+                        parsedFlags.error = true;
+                        parsedFlags.errorText = "Unknown flag " + s;
+                    } 
                 }
             // given token is not a tack flag, but if text is not set
             // then it will be set by default
