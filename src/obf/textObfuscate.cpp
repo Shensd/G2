@@ -27,12 +27,12 @@ namespace obf {
 
             ArithmeticTreeMember temp = position->getElement();
             if(temp.isOperator) {
-                //tour += " ";
+                tour += " ";
                 tour += ((char) temp.value);
-                //tour += " ";
+                tour += " ";
             } else {
-                //tour += " " + std::to_string(temp.value) + " ";
-                tour += std::to_string(temp.value);
+                tour += " " + std::to_string(temp.value) + " ";
+                //tour += std::to_string(temp.value);
             }
 
             if(tree->getRight(position) != nullptr) {

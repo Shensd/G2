@@ -4,6 +4,7 @@
 
 #include "args/parseArgs.hpp"
 #include "obf/textObfuscate.hpp"
+#include "obf/whitespace/whitespace.hpp"
 
 std::vector<std::string> getArgString(int argc, char** argv) {
     std::vector<std::string> args;
@@ -21,7 +22,6 @@ int main(int argc, char** argv) {
     arg::flags options = arg::parse(args);
 
     // TODO 
-    // Add intensity
     // Add obfuscation types (whitespace, equations)
     // Add ability to obfuscate exisiting c programs
     std::string helpDialog = 
@@ -38,6 +38,8 @@ int main(int argc, char** argv) {
             "   (use - for stdout) name of output c file\n"
             "--intensity, -i\n"
             "   numeric value to determine how intense the obfuscation should be\n"
+            "--whitespace, -w\n"
+            "   set to randomize whitespace\n"
             "\n"
             "Copyright 2019 Jack Hance";
 
@@ -50,6 +52,10 @@ int main(int argc, char** argv) {
 
     if(options.textSet) {
         std::string obfuscated = obf::textObfuscate(options.text, options.intensity);
+
+        if(options.whitespaceSet) {
+            obfuscated = obf::randomizeWhitespace(obfuscated, 50);
+        }
 
         if(options.filenameSet) {
             if(options.filename == "-") {
