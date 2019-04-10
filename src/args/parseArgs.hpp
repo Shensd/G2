@@ -28,6 +28,9 @@ namespace arg {
         bool filenameSet = false;
         std::string filename = "out.c";
 
+        bool intensitySet = false;
+        int intensity = 1;
+
         bool error = false;
         std::string errorText = "";
     };
@@ -40,6 +43,7 @@ namespace arg {
         void flagParseText(std::string flagText, std::string content, struct flags* flagPool );
         void flagParseType(std::string flagText, std::string content, struct flags* flagPool );
         void flagParseFilename(std::string flagText, std::string content, struct flags* flagPool );
+        void flagParseIntensity(std::string flagText, std::string content, struct flags* flagPool );
 
         // flag parse func map
         std::map<std::string, void(*)(std::string, std::string, struct flags*)> flagFuncs;

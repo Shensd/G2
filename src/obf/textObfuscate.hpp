@@ -64,7 +64,7 @@ namespace obf {
     }
 
 
-    std::string textObfuscate(std::string message);
+    std::string textObfuscate(std::string message, int intensity=1);
 
 }
 

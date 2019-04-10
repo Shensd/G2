@@ -83,6 +83,32 @@ namespace arg {
         }
 
         /**
+         * Set the intensity for text obfuscation
+         * 
+         * @param flagText text of flag
+         * @param content next block of text in commard arg string
+         * @param flagPool struct of already set flags
+         */
+        void flagParseIntensity(std::string flagText, std::string content, struct flags* flagPool ) {
+            if(content == "") {
+                flagPool->error = true;
+                flagPool->errorText = "Intesity flag set but no amount given";
+            }
+
+            int intensity = 1;
+
+            try {
+                intensity = std::stoi(content);
+            } catch(std::exception e) {
+                flagPool->error = true;
+                flagPool->errorText = "Given itensity is not a valid number";
+            }
+
+            flagPool->intensitySet = true;
+            flagPool->intensity = intensity;
+        }
+
+        /**
          * splits a string by a given delim and returns the result in a vector
          * 
          * @param str string to be split
@@ -162,7 +188,10 @@ namespace arg {
             {"y", &flagParseType},
 
             {"filename", &flagParseFilename},
-            {"o", &flagParseFilename}
+            {"o", &flagParseFilename},
+
+            {"intensity", &flagParseIntensity},
+            {"i", &flagParseIntensity}
         };
 
         for(int i = 0; i < rawArgs.size(); i++) {

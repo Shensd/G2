@@ -306,15 +306,17 @@ namespace obf {
      * @param message message to encode
      * @return string of C char array syntax
      */
-    std::string textObfuscate(std::string message) {
+    std::string textObfuscate(std::string message, int intensity) {
         srand(time(NULL));
+
+        if(intensity < 1) intensity = 1;
 
         std::string obfuscated = "#include <stdio.h>\nint main(){char msg[] = {";
 
         std::vector<int> asciis = getAsciiValues(message);
 
         for(int i = 0; i < asciis.size(); i++) {
-            obfuscated += getWeirdArithmetic(asciis.at(i), 20);
+            obfuscated += getWeirdArithmetic(asciis.at(i), intensity);
             if(i < asciis.size() - 1) {
                 obfuscated += ",";
             }

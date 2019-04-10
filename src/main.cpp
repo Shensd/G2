@@ -36,6 +36,8 @@ int main(int argc, char** argv) {
             "   text to encode\n"
             "--filename, -o\n"
             "   (use - for stdout) name of output c file\n"
+            "--intensity, -i\n"
+            "   numeric value to determine how intense the obfuscation should be\n"
             "\n"
             "Copyright 2019 Jack Hance";
 
@@ -47,7 +49,7 @@ int main(int argc, char** argv) {
     }
 
     if(options.textSet) {
-        std::string obfuscated =  obf::textObfuscate(options.text);
+        std::string obfuscated = obf::textObfuscate(options.text, options.intensity);
 
         if(options.filenameSet) {
             if(options.filename == "-") {
