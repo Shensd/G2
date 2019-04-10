@@ -21,7 +21,11 @@ Options:
 --text, -t
    text to encode
 --filename, -o
-   (default out.c) name of output c file
+   (use - for stdout) name of output c file
+--intensity, -i
+   numeric value to determine how intense the obfuscation should be
+--whitespace, -w
+   set to randomize whitespace
 
 Copyright 2019 Jack Hance
 ```
