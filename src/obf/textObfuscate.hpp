@@ -14,7 +14,7 @@
 namespace obf {
 
     // private namespace
-    namespace {
+    namespace _helper {
 
         enum OPERATOR {
             ADD      = '+',
@@ -62,6 +62,28 @@ namespace obf {
         std::pair<int, int> getSpreadDivision(int num, int maxOverflow = 200);
         std::pair<int, int> getSpreadXOR(int num, int maxOverflow = 200);
     }
+
+    /**
+     * TODO
+     * 
+     * Other methods of obfuscation could be
+     * - Struct spam (we make a lot of structs and fill those with data and its awful)
+     * - String arithmetic 
+     * - function spam, we make functions that return what we want and its also awful
+     *    - we can repeatidly pipe input and output from function to function to make very long chains
+     * - pointers somehow? I feel like we could do something with pointer offsets 
+     *    - maybe we can place items art certain memory positiongs and read the positions themselves as
+     *      chars (convert memory addresses into chars)
+     *    - if memory positions are consistent between runs then we should be able to do
+     *      math with the memory addresses themselves consistently
+     * - More spread operators (or, and, left shift, right shift, not somehow?)
+     * - predicitable randomization
+     *    - logically if we start with the same seed then it should produce the same result (probably varies
+     *      across system though)
+     * - take an image, convert it to black and white, and basically place characters on each
+     *   black pixel creating an image of the given message
+     * - and a mix of all of the above 
+     */
 
 
     std::string textObfuscate(std::string message, int intensity=1);

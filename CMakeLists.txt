@@ -2,14 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(G2)
 
-add_executable(
-    G2
+include_directories(src)
 
-    src/main.cpp
-    
-    src/args/parseArgs.cpp
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-    src/obf/textObfuscate.cpp
-
-    src/obf/whitespace/whitespace.cpp
-)
+add_executable(G2 ${SOURCES})

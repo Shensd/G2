@@ -24,6 +24,10 @@ namespace obf {
      * Randomize the whitespace of a given string, converts spaces, tabs, and newlines
      * into random mixes of eachother 
      * 
+     * TODO 
+     * - Add whitespace around characters that can be whitespace-d (eg, brackets, parenthesis)
+     * - Prevent removing the newline after macros since c can't handle that
+     * 
      * @param str string to randomize the whitespace of
      * @param intensity how intense to make the randomization
      * @return a string with much worse whitespace

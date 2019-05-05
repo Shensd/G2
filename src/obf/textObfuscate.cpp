@@ -3,7 +3,7 @@
 namespace obf {
 
     // private namespace
-    namespace {
+    namespace _helper {
 
         /**
          * Traverse a tree of ArithmeticTreeMembers eulers tour style and return
@@ -313,10 +313,10 @@ namespace obf {
 
         std::string obfuscated = "#include <stdio.h>\nint main(){char msg[] = {";
 
-        std::vector<int> asciis = getAsciiValues(message);
+        std::vector<int> asciis = _helper::getAsciiValues(message);
 
         for(int i = 0; i < asciis.size(); i++) {
-            obfuscated += getWeirdArithmetic(asciis.at(i), intensity);
+            obfuscated += _helper::getWeirdArithmetic(asciis.at(i), intensity);
             if(i < asciis.size() - 1) {
                 obfuscated += ",";
             }
