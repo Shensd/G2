@@ -8,7 +8,7 @@ G2 (short for general2) is a command line tool that generates obfuscated C code 
 
 ### How Do I Use It?
 
-Because I am top teir lazy and this tool is not finished, here is the current help output:
+G2 is a rather simple tool currently, and doesn't have many command line flags, here is the current help output:
 
 ```
 G2 - An obfuscated C message generator
@@ -20,18 +20,28 @@ Options:
    show this help text and exit
 --text, -t
    text to encode
---filename, -o
+--in, -i
+   name of input file
+--out, -o
    (use - for stdout) name of output c file
---intensity, -i
+--intensity
    numeric value to determine how intense the obfuscation should be
 --whitespace, -w
    set to randomize whitespace
 
 Copyright 2019 Jack Hance
+
 ```
 
 ### How Do I Build It?
 
-This project is configured with [CMake](https://cmake.org/), so to build it simply create a directory in the project named `build`, cd into it, and then run `cmake ..`
+G2 has an included [CMake](https://cmake.org/) file, so all one needs to do is the following:
+
+ * Create a directory named `build` or something similar
+ * `cd` into the directory
+ * Execute `cmake .. && make`
+
+The output executable will be named `G2`.
+
 
 ###### This project is licensed under the MIT Open Source License 

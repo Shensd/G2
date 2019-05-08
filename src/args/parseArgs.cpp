@@ -25,6 +25,13 @@ namespace arg {
          * @param flagPool struct of already set flags
          */
         void flagParseText(std::string flagText, std::string content, struct flags* flagPool) {
+            // Text input and file input cannot be used at the same time
+            if(flagPool->inFilenameSet) {
+                flagPool->error = true;
+                flagPool->errorText = "Text input and file input cannot be used at the same time";
+                return;
+            }
+
             if(content != "") {
                 flagPool->textSet = true;
                 flagPool->text = content;
@@ -65,21 +72,59 @@ namespace arg {
 
         /**
          * Filename flag parser, given content is converted into a type, error flag
-         * set if given content cannot be translated into a input type
+         * set if given content cannot be translated into an output filename
          * 
          * @param flagText text of flag
          * @param content next block of text in command arg string
          * @param flagPool struct of already set flags
          */
-        void flagParseFilename(std::string flagText, std::string content, struct flags* flagPool ) {
+        void flagParseOutFilename(std::string flagText, std::string content, struct flags* flagPool ) {
             if(content == "") {
                 flagPool->error = true;
                 flagPool->errorText = "File name flag set but not file name given";
                 return;
             }
 
-            flagPool->filenameSet = true;
-            flagPool->filename = content;
+            flagPool->outFilenameSet = true;
+            flagPool->outFilename = content;
+        }
+
+        /**
+         * Filename flag parser, given content is converted into a type, error flag
+         * set if given content cannot be translated into an input filename
+         * 
+         * @param flagText text of flag
+         * @param content next block of text in command arg string
+         * @param flagPool struct of already set flags
+         */
+        void flagParseInFilename(std::string flagText, std::string content, struct flags* flagPool ) {
+            // no file name given
+            if(content == "") {
+                flagPool->error = true;
+                flagPool->errorText = "File name flag set but not file name given";
+                return;
+            }
+
+            std::ifstream temp(content);
+
+            // file doesn't exist
+            if(!temp.is_open()) {
+                flagPool->error = true;
+                flagPool->errorText = "Input file " + content + " not found";
+                return;
+            }
+
+            // file input and text input cannot be used at the same time
+            if(flagPool->textSet) {
+                flagPool->error = true;
+                flagPool->errorText = "File input and text input cannot be used at the same time";
+                return;
+            }
+
+            temp.close();
+
+            flagPool->inFilenameSet = true;
+            flagPool->inFilename = content;
         }
 
         /**
@@ -174,6 +219,121 @@ namespace arg {
             }
             return str;
         }
+
+        /**
+         * Returns true if the given argument is a tack flag (a primary argument
+         * denoted with a tack infront of it, eg --help)
+         *
+         * @param arg argument to test
+         * @return true if tack flag
+         */
+        bool isTackFlag(std::string arg) {
+            return arg[0] == '-';
+        }
+
+        /**
+         * Get the content of a tack flag (aka, strip leading tacks)
+         * 
+         * @param arg argument to grab flag content from
+         * @return flag content
+         */
+        std::string getTackFlagContent(std::string arg) {
+            std::vector<std::string> parts = split(arg, '-');
+
+            return parts[parts.size() - 1];
+        }
+
+        /**
+         * Return the content for an argument, or an empty string if there is 
+         * none
+         * 
+         * @param rawArgs arguments to grab content from
+         * @param index index of argument to grab content for
+         * @return content if found, an empty string otherwise
+         */
+        std::string getArgArgument(std::vector<std::string> rawArgs, int index) {
+            std::string content;
+            if(index < rawArgs.size() - 1) {
+                content = rawArgs[index + 1];
+            } else {
+                content = "";
+            }
+
+            return content;
+        }
+
+        /**
+         * Parse a tack flag at a given index and return if next flag needs to 
+         * be skipped
+         * 
+         * @param rawArgs raw arguments to read from
+         * @param index current position in argument parsing
+         * @param flagPool flag struct to read results into
+         * @return true if next flag was eaten
+         */
+        bool parseTackArg(std::vector<std::string> rawArgs, int index, struct flags* flagPool) {
+            std::string currentArg = rawArgs[index];
+
+            std::string flagText = getTackFlagContent(currentArg);
+
+            // check if flag function if it exists in the map
+            auto iter = flagFuncs.find(flagText);
+            if(iter != flagFuncs.end()) {
+
+                std::string content = getArgArgument(rawArgs, index);
+
+                // now call associated function pointer
+                iter->second(flagText, content, flagPool);
+                
+                return true;
+            } else {
+
+                // if a flag that requires content isn't found, try to process
+                // as a no content flag
+                auto iter = flagFuncsNoContent.find(flagText);
+
+                if(iter != flagFuncsNoContent.end()) {
+                    iter->second(flagText, flagPool);
+                } else {
+                    // that flag doesnt have an entry in the function map
+                    flagPool->error = true;
+                    flagPool->errorText = "Unknown flag " + currentArg;
+                } 
+            }
+
+            return false;
+        }
+
+        /**
+         * Parsed a set of given raw arguments into a flags structure
+         * 
+         * @param rawArgs raw arguments to parse
+         * @param flagPool flags struct to read results into
+         */
+        void runFlagFuncs(std::vector<std::string> rawArgs, struct flags* flagPool) {
+
+            for(int i = 0; i < rawArgs.size(); i++) {
+                std::string currentArg = rawArgs[i];
+
+                // is tack flag, pull flag text
+                if(isTackFlag(currentArg)) {
+                    bool skipNext = parseTackArg(rawArgs, i, flagPool);
+
+                    if(skipNext) i++;
+                // given token is not a tack flag, but if text is not set
+                // then it will be set by default
+                } else {
+                    if(!flagPool->textSet) {
+                        flagPool->textSet = true;
+                        flagPool->text = currentArg;
+                    }
+                }
+
+                // check if the error flag was set at any point and immediately
+                // exit if it was
+                if(flagPool->error) break;
+            }
+        }
     }
 
     /**
@@ -185,7 +345,6 @@ namespace arg {
      * @return a flag structure of set args
      */
     flags parse(std::vector<std::string> rawArgs) {
-        struct flags parsedFlags;
 
         // create flag parse map
         flagFuncs = {
@@ -195,11 +354,13 @@ namespace arg {
             {"type", &flagParseType},
             {"y", &flagParseType},
 
-            {"filename", &flagParseFilename},
-            {"o", &flagParseFilename},
+            {"out", &flagParseOutFilename},
+            {"o", &flagParseOutFilename},
 
-            {"intensity", &flagParseIntensity},
-            {"i", &flagParseIntensity}
+            {"in", &flagParseInFilename},
+            {"i", &flagParseInFilename},
+
+            {"intensity", &flagParseIntensity}
         };
 
         flagFuncsNoContent = {
@@ -210,59 +371,9 @@ namespace arg {
             {"w", &flagParseWhitespace}
         };
 
-        for(int i = 0; i < rawArgs.size(); i++) {
-            std::string s = rawArgs[i];
+        struct flags parsedFlags;
 
-            // is tack flag, pull flag text
-            if(s[0] == '-') {
-                std::vector<std::string> parts = split(s, '-');
-                std::string flagText = parts[parts.size() - 1];
-
-                // check if flag function if it exists in the map
-                auto iter = flagFuncs.find(flagText);
-                if(iter != flagFuncs.end()) {
-
-                    std::string content;
-                    if(i < rawArgs.size() - 1) {
-                        content = rawArgs[i + 1];
-                    } else {
-                        content = "";
-                    }
-
-                    // now call associated function pointer
-                    iter->second(flagText, content, &parsedFlags);
-                    
-                    // increment i to skip next token since it was used by 
-                    // the current flag
-                    i++;
-                } else {
-
-                    // if a flag that requires content isn't found, try to process
-                    // as a no content flag
-                    auto iter = flagFuncsNoContent.find(flagText);
-
-                    if(iter != flagFuncsNoContent.end()) {
-                        iter->second(flagText, &parsedFlags);
-                    } else {
-                        // that flag doesnt have an entry in the function map
-                        parsedFlags.error = true;
-                        parsedFlags.errorText = "Unknown flag " + s;
-                    } 
-                }
-            // given token is not a tack flag, but if text is not set
-            // then it will be set by default
-            } else {
-                if(!parsedFlags.textSet) {
-                    parsedFlags.textSet = true;
-                    parsedFlags.text = s;
-                }
-            }
-
-            // check if the error flag was set at any point and immediately
-            // exit if it was
-
-            if(parsedFlags.error) break;
-        }
+        runFlagFuncs(rawArgs, &parsedFlags);
 
         return parsedFlags;
     }

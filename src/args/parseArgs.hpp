@@ -5,10 +5,7 @@
 #include <vector>
 #include <functional>
 #include <map>
-
-#include <iostream>
-
-#include "../stack/stack.hpp"
+#include <fstream>
 
 namespace arg {
     enum inputFormat {
@@ -25,8 +22,11 @@ namespace arg {
         bool typeSet = false;
         inputFormat type = TEXT;
 
-        bool filenameSet = false;
-        std::string filename = "out.c";
+        bool outFilenameSet = false;
+        std::string outFilename = "out.c";
+
+        bool inFilenameSet = false;
+        std::string inFilename = "";
 
         bool intensitySet = false;
         int intensity = 1;
@@ -60,9 +60,16 @@ namespace arg {
 
         // string to lower helper function
         std::string toLower(std::string str);
+
+        bool isTackFlag(std::string arg);
+        std::string getTackFlagContent(std::string arg);
+        std::string getArgArgument(std::vector<std::string> rawArgs, int index);
+
+        void runFlagFuncs(std::vector<std::string> rawArgs, struct flags* flagPool);
+        bool parseTackArg(std::vector<std::string> rawArgs, int index, struct flags* flagPool);
     };
 
-    flags parse(std::vector<std::string>  rawArgs);
+    flags parse(std::vector<std::string> rawArgs);
 };   
 
 #endif // !PARSE_ARGS_HPP
