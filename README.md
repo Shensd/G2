@@ -4,7 +4,7 @@ Have you ever wanted to make generating hard to read code easier than ever?
 
 ### What is This?
 
-G2 (short for general2) is a command line tool that generates obfuscated C code in either random patterns or in the form of images. It is written from scratch in C++, with the goal of as little imports as possible.
+G2 (short for general2) is a command line tool that generates obfuscated C code in random patterns with a future goal to output in the form of image ascii art. It is written from scratch in C++, with the goal of as little imports as possible.
 
 ### How Do I Use It?
 
@@ -44,4 +44,4 @@ G2 has an included [CMake](https://cmake.org/) file, so all one needs to do is t
 The output executable will be named `G2`.
 
 
-###### This project is licensed under the MIT Open Source License 
+###### This project is licensed under the MIT Open Source License, see `LICENSE` for more information.
